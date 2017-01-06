@@ -11,6 +11,7 @@ using ShipStationAccess.V2.Models.Order;
 using ShipStationAccess.V2.Models.Store;
 using ShipStationAccess.V2.Models.TagList;
 using ShipStationAccess.V2.Services;
+using ShipStationAccess.V2.Models.Label;
 
 namespace ShipStationAccess.V2
 {
@@ -175,10 +176,25 @@ namespace ShipStationAccess.V2
 
 			return orders;
 		}
-		#endregion
+        #endregion
 
-		#region Update Orders
-		public void UpdateOrder( ShipStationOrder order )
+        #region Create Label
+        public HttpWebResponse CreateLabel(ShipStationLabel l)
+        {
+            return _webRequestServices.PostDataGetResponse(ShipStationCommand.CreateLabel, l.SerializeToJson());
+        }
+
+        #region Void Label
+        public HttpWebResponse VoidLabel(VoidLabel l)
+        {
+            return _webRequestServices.PostDataGetResponse(ShipStationCommand.VoidLabel, l.SerializeToJson());
+        }
+        #endregion
+
+        #endregion
+
+        #region Update Orders
+        public void UpdateOrder( ShipStationOrder order )
 		{
 			if( !order.IsValid() )
 				return;

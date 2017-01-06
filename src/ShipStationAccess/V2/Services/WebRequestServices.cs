@@ -109,7 +109,23 @@ namespace ShipStationAccess.V2.Services
 			}
 		}
 
-		public async Task PostDataAsync( ShipStationCommand command, string jsonContent )
+        public HttpWebResponse PostDataGetResponse(ShipStationCommand command, string jsonContent)
+        {
+            var request = this.CreateServicePostRequest(command, jsonContent);
+
+            try
+            {
+                var response = (HttpWebResponse)request.GetResponse();
+                return response;
+            }
+            catch (WebException x)
+            {
+                this.LogPostError(this._credentials.ApiKey, request.RequestUri.AbsoluteUri, x.Response.GetHttpStatusCode(), jsonContent, x);
+                throw;
+            }
+        }
+
+        public async Task PostDataAsync( ShipStationCommand command, string jsonContent )
 		{
 			var request = this.CreateServicePostRequest( command, jsonContent );
 			this.LogPostInfo( this._credentials.ApiKey, request.RequestUri.AbsoluteUri, jsonContent );

@@ -7,8 +7,10 @@
 		public static readonly ShipStationCommand GetTags = new ShipStationCommand( "/Accounts/ListTags " );
 		public static readonly ShipStationCommand CreateUpdateOrder = new ShipStationCommand( "/Orders/CreateOrder" );
 		public static readonly ShipStationCommand GetStores = new ShipStationCommand( "/Stores" );
+        public static readonly ShipStationCommand CreateLabel = new ShipStationCommand("/shipments/createlabel");
+        public static readonly ShipStationCommand VoidLabel = new ShipStationCommand("/shipments/voidlabel");
 
-		private ShipStationCommand( string command )
+        private ShipStationCommand( string command )
 		{
 			this.Command = command;
 		}
