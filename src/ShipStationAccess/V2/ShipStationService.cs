@@ -207,8 +207,8 @@ namespace ShipStationAccess.V2
 				}
 				catch( WebException x )
 				{
-					if( x.Response.GetHttpStatusCode() == HttpStatusCode.InternalServerError )
-						ShipStationLogger.Log.Trace( "Error updating order. Encountered 500 Internal Error. Order: {order}", order );
+					if( x.Response.GetHttpStatusCode() == HttpStatusCode.InternalServerError || x.Response.GetHttpStatusCode() == HttpStatusCode.Unauthorized )
+						ShipStationLogger.Log.Trace($"Error updating order. Encountered {x.Response.GetHttpStatusCode()} Internal Error. Order: {order}", order );
 					else
 						throw;
 				}
