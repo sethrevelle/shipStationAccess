@@ -199,20 +199,29 @@ namespace ShipStationAccess.V2
 			if( !order.IsValid() )
 				return;
 
+            Exception exception = null;
+
 			ActionPolicies.Submit.Do( () =>
 			{
 				try
 				{
-					this._webRequestServices.PostData( ShipStationCommand.CreateUpdateOrder, order.SerializeToJson() );
+                    var json = order.SerializeToJson();
+					this._webRequestServices.PostData( ShipStationCommand.CreateUpdateOrder, json);
 				}
 				catch( WebException x )
 				{
-					if( x.Response.GetHttpStatusCode() == HttpStatusCode.InternalServerError || x.Response.GetHttpStatusCode() == HttpStatusCode.Unauthorized )
-						ShipStationLogger.Log.Trace($"Error updating order. Encountered {x.Response.GetHttpStatusCode()} Internal Error. Order: {order}", order );
-					else
-						throw;
+                    if (x.Response.GetHttpStatusCode() == HttpStatusCode.InternalServerError || x.Response.GetHttpStatusCode() == HttpStatusCode.Unauthorized || x.Response.GetHttpStatusCode() == HttpStatusCode.NotFound)
+                    {
+                        ShipStationLogger.Log.Trace($"Error updating order. Encountered {x.Response.GetHttpStatusCode()} Internal Error. Order: {order}", order);
+                        exception = x;
+                    }
+                    else
+                        exception = x;
 				}
 			} );
+
+            if (exception != null)
+                throw exception;
 		}
 
 		public async Task UpdateOrderAsync( ShipStationOrder order )
